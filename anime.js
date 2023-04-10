@@ -129,10 +129,10 @@ const engine = function (anime) {
     if (typeof value === 'string') {
       if (value.endsWith('%')) {
         keyCode = '%';
-        value = parseInt(value);
+        value = parseFloat(value);
       } else if (value.endsWith('px')) {
         keyCode = 'px';
-        value = parseInt(value);
+        value = parseFloat(value);
       } else {
         throw new TypeError(`string value must ends with '%' or 'px'`);
       }
@@ -161,7 +161,7 @@ const engine = function (anime) {
   function changeAll(elapsed, current, final = false) {
     anime.targets.forEach((target, index) => {
       Object.keys(anime.dest).forEach((key) => {
-        let origin = parseInt(cloneTargets[index][key]);
+        let origin = parseFloat(cloneTargets[index][key]);
         let dest = anime.dest[key];
         // 对象类型
         if (typeof dest === 'object') {
