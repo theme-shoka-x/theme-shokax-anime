@@ -2,18 +2,132 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>theme-shokax-anime</title>
-    <style>
-      body {
-        background-color: black;
-      }
-    </style>
+  <meta charset="UTF-8">
+  <title>theme-shokax-anime</title>
+  <style>
+    body {
+      background-color: grey;
+    }
+
+    #tool {
+      text-shadow: none;
+      top: auto;
+      box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+      background: white;
+      right: 0;
+      bottom: 0;
+      position: fixed;
+      z-index: 999;
+    }
+
+    #tool .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+      padding: 5px;
+      font-size: 20px;
+      color: palevioletred;
+      cursor: pointer;
+    }
+
+    #content {
+      width: 600px;
+      margin: 0 auto;
+      line-height: 2rem;
+    }
+
+    #sidebar {
+      display: none;
+      position: fixed;
+      right: 0;
+      background: white;
+      box-shadow: 0 0.375rem 0.9375rem 0.3125rem rgba(0, 0, 0, 0.2);
+      z-index: 99;
+      width: 300px;
+      top: 0;
+      bottom: 0;
+      transition: all 0.2s ease-in-out 0s;
+    }
+  </style>
 </head>
 
 <body>
-    <script src="../anime.js"></script>
-    <script src="./firework.js"></script>
+  <div id="content">
+    <div>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ligula justo, lobortis sit amet semper vel, dignissim
+      sit amet libero. Praesent ac tempus ligula. Maecenas at gravida odio. Etiam tristique volutpat lacus eu faucibus.
+      Donec non tempus arcu. Phasellus adipiscing, mauris nec mollis egestas, ipsum nunc auctor velit, et rhoncus lorem
+      ipsum at ante. Praesent et sem in velit volutpat auctor. Duis vel mauris nulla. Maecenas mattis interdum ante,
+      quis
+      sagittis nibh cursus et. Nulla facilisi. Morbi convallis gravida tortor, ut fermentum enim gravida et. Nunc vel
+      dictum nisl, non ultrices libero. Proin vestibulum felis eget orci consectetur lobortis. Vestibulum augue nulla,
+      iaculis vitae augue vehicula, dignissim ultrices libero. Sed imperdiet urna et quam ultrices tincidunt nec ac
+      magna.
+      Etiam vel pharetra elit.
+    </div>
+    <div>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ligula justo, lobortis sit amet semper vel, dignissim
+      sit amet libero. Praesent ac tempus ligula. Maecenas at gravida odio. Etiam tristique volutpat lacus eu faucibus.
+      Donec non tempus arcu. Phasellus adipiscing, mauris nec mollis egestas, ipsum nunc auctor velit, et rhoncus lorem
+      ipsum at ante. Praesent et sem in velit volutpat auctor. Duis vel mauris nulla. Maecenas mattis interdum ante,
+      quis
+      sagittis nibh cursus et. Nulla facilisi. Morbi convallis gravida tortor, ut fermentum enim gravida et. Nunc vel
+      dictum nisl, non ultrices libero. Proin vestibulum felis eget orci consectetur lobortis. Vestibulum augue nulla,
+      iaculis vitae augue vehicula, dignissim ultrices libero. Sed imperdiet urna et quam ultrices tincidunt nec ac
+      magna.
+      Etiam vel pharetra elit.
+    </div>
+    <div>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ligula justo, lobortis sit amet semper vel, dignissim
+      sit amet libero. Praesent ac tempus ligula. Maecenas at gravida odio. Etiam tristique volutpat lacus eu faucibus.
+      Donec non tempus arcu. Phasellus adipiscing, mauris nec mollis egestas, ipsum nunc auctor velit, et rhoncus lorem
+      ipsum at ante. Praesent et sem in velit volutpat auctor. Duis vel mauris nulla. Maecenas mattis interdum ante,
+      quis
+      sagittis nibh cursus et. Nulla facilisi. Morbi convallis gravida tortor, ut fermentum enim gravida et. Nunc vel
+      dictum nisl, non ultrices libero. Proin vestibulum felis eget orci consectetur lobortis. Vestibulum augue nulla,
+      iaculis vitae augue vehicula, dignissim ultrices libero. Sed imperdiet urna et quam ultrices tincidunt nec ac
+      magna.
+      Etiam vel pharetra elit.
+    </div>
+    <div>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ligula justo, lobortis sit amet semper vel, dignissim
+      sit amet libero. Praesent ac tempus ligula. Maecenas at gravida odio. Etiam tristique volutpat lacus eu faucibus.
+      Donec non tempus arcu. Phasellus adipiscing, mauris nec mollis egestas, ipsum nunc auctor velit, et rhoncus lorem
+      ipsum at ante. Praesent et sem in velit volutpat auctor. Duis vel mauris nulla. Maecenas mattis interdum ante,
+      quis
+      sagittis nibh cursus et. Nulla facilisi. Morbi convallis gravida tortor, ut fermentum enim gravida et. Nunc vel
+      dictum nisl, non ultrices libero. Proin vestibulum felis eget orci consectetur lobortis. Vestibulum augue nulla,
+      iaculis vitae augue vehicula, dignissim ultrices libero. Sed imperdiet urna et quam ultrices tincidunt nec ac
+      magna.
+      Etiam vel pharetra elit.
+    </div>
+  </div>
+  <div id="tool">
+    <div class="item" id="section"><span>菜单</span></div>
+    <div class="item" id="top"><span>置顶</span></div>
+  </div>
+  <div id="sidebar" class></div>
+  <script src="../anime.js"></script>
+  <script src="./firework.js"></script>
+  <script src="./library.js"></script>
+  <script>
+    document.getElementById('top').addEventListener('click', function () {
+      pageScroll(0);
+    })
+    const sideBar = document.getElementById('sidebar');
+    document.getElementById('section').addEventListener('click', function () {
+      if (sideBar.classList.contains('on')) {
+        sideBar.classList.remove('on');
+        transition(sideBar, 'slideRightOut');
+      }
+      else {
+        transition(sideBar, 'slideRightIn', function () {
+          sideBar.classList.add('on');
+        });
+      }
+    })
+  </script>
 </body>
 
 </html>
