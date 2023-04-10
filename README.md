@@ -1,6 +1,7 @@
 # theme-shokax-anime
 
-anime.js for [hexo-theme-shokaX](https://github.com/theme-shoka-x/hexo-theme-shokaX), inspired by [anime](https://github.com/juliangarnier/anime)
+anime.js for [hexo-theme-shokaX](https://github.com/theme-shoka-x/hexo-theme-shokaX)  
+inspired by [anime](https://github.com/juliangarnier/anime)
 
 ## Usage
 
@@ -86,7 +87,7 @@ new anime({
   // support function
   y: function(item) {
     return item.x;
-  }
+  },
   // support nest
   x: {
     value: 20,      // required
@@ -111,4 +112,5 @@ const defaultOptions = {
   begin: null,
   update: null,
   complete: null
+}
 ```

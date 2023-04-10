@@ -38,7 +38,8 @@ const penner = function () {
  * Date: 2023-04-10
  */
 const engine = function (anime) {
-  const validTransform = ['translateX', 'translateY', 'translateZ', 'rotate', 'rotateX', 'rotateY', 'rotateZ', 'scale', 'scaleX', 'scaleY', 'scaleZ', 'skew', 'skewX', 'skewY', 'perspective', 'matrix', 'matrix3d'];
+  // 目前仅支持translate
+  const validTransform = ['translateX', 'translateY', 'translateZ'];
 
   function selectKey(target, key) {
     if (target instanceof HTMLElement && target.style && 'transform' in target.style && validTransform.includes(key)) {
@@ -181,6 +182,7 @@ const engine = function (anime) {
               change(item, origin, elapsed, value, key, final);
             }
           } else {
+            // nest模式
             // 支持 {value: 1, duration: 500, easing: 'linear'}
             let { value, duration, easing } = dest;
             if (current <= start + duration) {
@@ -191,6 +193,7 @@ const engine = function (anime) {
             }
           }
         } else {
+          // function模式
           if (typeof dest === 'function') {
             dest = dest(item, index);
           }
@@ -200,7 +203,7 @@ const engine = function (anime) {
     })
   }
 
-  // 核心函数，用于控制动画raf
+  // 核心函数，用于控制动画rAF
   function step() {
     let current = Date.now();
     // 已经结束，调用结束回调
@@ -210,12 +213,12 @@ const engine = function (anime) {
       anime.isPlay = false;
       return;
     }
-    // 还未开始
+    // 还未开始，继续delay
     if (current < start) {
       requestAnimationFrame(step);
       return;
     }
-    let elapsed = penner()[anime.easing]()((current - start) / anime.duration);
+    const elapsed = penner()[anime.easing]()((current - start) / anime.duration);
     // targets有效
     isValid && changeAll(elapsed, current);
     // 调用更新回调
