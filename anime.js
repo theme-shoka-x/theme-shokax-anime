@@ -57,25 +57,24 @@ const engine = function (anime) {
   const end = start + anime.duration;
   // target是否有效
   const isValid = !!anime.targets;
-  let cloneTargets;
+  let cloneTargets = [];
 
   // 初始化cloneTargets
   function initTarget() {
     if (!isValid) return;
+    // 将targets转换为array便于处理
     if (!(anime.targets instanceof Array)) {
       anime.targets = [anime.targets];
     }
-    cloneTargets = [];
     for (let target of anime.targets) {
       let cloneTarget = {};
       for (let key in anime.dest) {
         if (Array.isArray(anime.dest[key])) {
-          // [0,100]类型，from to
+          // [0,100]类型，from-to模式
           if (anime.dest[key].length === 2 && typeof anime.dest[key][0] !== 'object') {
             // 强制改变当前初始状态
             //需考虑是否为style/transform/attribute
-            const keyType = selectKey(target, key);
-            switch (keyType) {
+            switch (selectKey(target, key)) {
               case 'transform':
                 if (typeof anime.dest[key][0] === 'string') {
                   target.style.transform = `${key}(${anime.dest[key][0]})`
@@ -96,7 +95,7 @@ const engine = function (anime) {
             // keyframe类型
             // 支持 [{value: 1, duration: 500, easing: 'linear'},{value: 2, duration: 500, easing: 'linear'}]
             // value 和 duration 是必须的
-            // 为 dest绑定startTimeStamp，便于之后判断keyframe
+            // 为dest绑定startTimeStamp，便于之后判断keyframe
             let start = 0;
             for (let o of anime.dest[key]) {
               o.startTimeStamp = start;
@@ -108,7 +107,7 @@ const engine = function (anime) {
           const keyType = selectKey(target, key);
           switch (keyType) {
             case 'transform':
-              let regex = new RegExp(`${key}\((\w+)\)`, g);
+              let regex = new RegExp(`${key}\((\w+)\)`, 'g');
               // is it true?
               cloneTarget[key] = target.style.transform.match(regex)[0];
               break;
@@ -117,7 +116,6 @@ const engine = function (anime) {
               break;
             case 'attribute':
               cloneTarget[key] = target[key];
-              break;
           }
         }
       }
@@ -132,7 +130,7 @@ const engine = function (anime) {
       if (value.endsWith('%')) {
         keyCode = '%';
         value = parseInt(value);
-      } else if (origin.endsWith('px')) {
+      } else if (value.endsWith('px')) {
         keyCode = 'px';
         value = parseInt(value);
       } else {
@@ -143,23 +141,25 @@ const engine = function (anime) {
     if (keyCode) {
       nextValue += keyCode;
     }
-    const keyType = selectKey(target, key);
-    if (keyType === 'transform') {
-      if (keyCode) {
-        target.style.transform = `${key}(${nextValue})`
-      } else {
-        target.style.transform = `${key}(${nextValue}px)`
-      }
-    } else if (keyType === 'style') {
-      target['style'][key] = nextValue;
-    } else {
-      target[key] = nextValue;
+    switch (selectKey(target, key)) {
+      case 'transform':
+        if (keyCode) {
+          target.style.transform = `${key}(${nextValue})`
+        } else {
+          target.style.transform = `${key}(${nextValue}px)`
+        }
+        break;
+      case 'style':
+        target['style'][key] = nextValue;
+        break;
+      case 'attribute':
+        target[key] = nextValue;
     }
   }
 
   // 改变target所有的属性
   function changeAll(elapsed, current, final = false) {
-    anime.targets.forEach((item, index) => {
+    anime.targets.forEach((target, index) => {
       Object.keys(anime.dest).forEach((key) => {
         let origin = parseInt(cloneTargets[index][key]);
         let dest = anime.dest[key];
@@ -177,9 +177,9 @@ const engine = function (anime) {
             let { value, duration, easing, startTimeStamp } = dest[i - 1];
             if (current <= start + duration + startTimeStamp) {
               elapsed = penner()[easing ? easing : anime.easing]()((current - start) / duration);
-              change(item, origin, elapsed, value, key);
+              change(target, origin, elapsed, value, key);
             } else if (final) {
-              change(item, origin, elapsed, value, key, final);
+              change(target, origin, elapsed, value, key, final);
             }
           } else {
             // nest模式
@@ -187,17 +187,17 @@ const engine = function (anime) {
             let { value, duration, easing } = dest;
             if (current <= start + duration) {
               elapsed = penner()[easing ? easing : anime.easing]()((current - start) / duration);
-              change(item, origin, elapsed, value, key);
+              change(target, origin, elapsed, value, key);
             } else if (final) {
-              change(item, origin, elapsed, value, key, final);
+              change(target, origin, elapsed, value, key, final);
             }
           }
         } else {
           // function模式
           if (typeof dest === 'function') {
-            dest = dest(item, index);
+            dest = dest(target, index);
           }
-          change(item, origin, elapsed, dest, key, final);
+          change(target, origin, elapsed, dest, key, final);
         }
       })
     })
@@ -205,9 +205,10 @@ const engine = function (anime) {
 
   // 核心函数，用于控制动画rAF
   function step() {
-    let current = Date.now();
+    const current = Date.now();
     // 已经结束，调用结束回调
     if (current > end) {
+      // 数据回正
       changeAll(1, current, true);
       anime.complete && typeof anime.complete == 'function' && anime.complete(anime.targets);
       anime.isPlay = false;
