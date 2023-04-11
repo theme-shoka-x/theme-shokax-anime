@@ -1,0 +1,25 @@
+{
+  "name": "theme-shokax-anime",
+  "version": "0.0.1",
+  "description": "anime.js for hexo-theme-shokax",
+  "main": "lib/anime.common.js",
+  "module": "lib/anime.es.mjs",
+  "browser": "lib/anime.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theme-shoka-x/theme-shokax-anime.git"
+  },
+  "keywords": [
+    "hexo",
+    "anime"
+  ],
+  "author": "d-sketon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/theme-shoka-x/theme-shokax-anime/issues"
+  },
+  "homepage": "https://github.com/theme-shoka-x/theme-shokax-anime#readme"
+}
