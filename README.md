@@ -8,7 +8,7 @@ inspired by [anime](https://github.com/juliangarnier/anime)
 ### Basic usage
 
 ```javascript
-new anime({
+anime({
   targets: document.getElementById("imgs"),
   duration: 1000,
   easing: "linear",
