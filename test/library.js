@@ -58,7 +58,7 @@ const transition = (target, type, complete, begin) => {
       display = type.display;
       break;
   }
-  new anime(Object.assign({
+  anime(Object.assign({
     targets: target,
     duration: 200,
     easing: 'linear',
@@ -82,5 +82,5 @@ const pageScroll = function (target, offset, complete) {
       complete && complete();
     }
   };
-  new anime(opt).play();
+  anime(opt).play();
 };

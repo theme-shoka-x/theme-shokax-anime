@@ -108,7 +108,7 @@
     <div class="item" id="top"><span>置顶</span></div>
   </div>
   <div id="sidebar" class></div>
-  <script src="../anime.js"></script>
+  <script src="../dist/anime.min.js"></script>
   <script src="./firework.js"></script>
   <script src="./library.js"></script>
   <script>
@@ -116,7 +116,7 @@
       pageScroll(0);
     })
     const sideBar = document.getElementById('sidebar');
-    document.getElementById('section').addEventListener('click', function () {
+    const sideBarHandler = function() {
       if (sideBar.classList.contains('on')) {
         sideBar.classList.remove('on');
         transition(sideBar, 'slideRightOut');
@@ -126,6 +126,9 @@
           sideBar.classList.add('on');
         });
       }
+    }
+    document.getElementById('section').addEventListener('click', function () {
+      sideBarHandler();
     })
   </script>
 </body>

@@ -23,14 +23,14 @@ new anime({
     // triggered after the animation ends
   },
   // properties to be changed in targets
-  opacity: 1
+  opacity: 1,
 }).play();
 ```
 
 ### Timeline
 
 ```javascript
-new anime().timeline().add({
+anime().timeline().add({
     targets: particules,
     duration: anime.random(1200, 1800),
     easing: "easeOutExpo",
@@ -42,7 +42,8 @@ new anime().timeline().add({
       return p.endPos.y;
     },
     radius: 0.1,
-  }).add({
+  })
+  .add({
     targets: circle,
     duration: anime.random(1200, 1800),
     easing: "easeOutExpo",
@@ -53,13 +54,14 @@ new anime().timeline().add({
       value: 0,
       easing: "linear",
       duration: anime.random(600, 800),
-    }
+    },
   }).play();
 ```
 
 ### More Examples
+
 ```javascript
-new anime({
+anime({
   // support DOM
   // targets: document.getElementById("imgs"),
   // support plain object
@@ -82,35 +84,36 @@ new anime({
   // support keyframe mode
   x: [
     { value: 10, duration: 200 },
-    { value: 20, duration: 400 }
+    { value: 20, duration: 400 },
   ],
   // support function
-  y: function(item) {
+  y: function (item) {
     return item.x;
   },
   // support nest
   x: {
-    value: 20,      // required
-    duration: 200,  // required
-    easing: 'linear'
+    value: 20, // required
+    duration: 200, // required
+    easing: "linear",
   },
   // support percentage and px
   // x: '100%',
   // x: '20px',
   // x: ['0%', '100%'],
-  // 
+  //
 }).play();
 ```
 
 ### Default Options
+
 ```js
 const defaultOptions = {
   targets: null,
   duration: Infinity,
-  easing: 'linear',
+  easing: "linear",
   delay: 0,
   begin: null,
   update: null,
-  complete: null
-}
+  complete: null,
+};
 ```

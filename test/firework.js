@@ -73,7 +73,7 @@ function animateParticules(x, y) {
   for (let i = 0; i < numberOfParticules; i++) {
     particules.push(createParticule(x, y));
   }
-  new anime().timeline().add({
+  anime().timeline().add({
     targets: particules,
     duration: anime.random(1200, 1800),
     easing: 'easeOutExpo',
@@ -99,7 +99,7 @@ function animateParticules(x, y) {
     }
   }).play();
 }
-const render = new anime({
+const render = anime({
   duration: Infinity,
   update: function () {
     ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
