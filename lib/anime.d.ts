@@ -73,7 +73,7 @@ declare class Anime {
 declare function anime(options?:AnimeOptions):Anime
 
 declare namespace anime {
-    function random(min?: number, max?: number): number;
+    function random(min: number, max: number): number;
 }
 
 export default anime
