@@ -1,119 +1,80 @@
-/* 爱来自ChatGPT和zkz098()
-* 使用ChatGPT生成+人工修正 */
+type EasingTypes =
+    | 'linear'
+    | 'easeInSine'
+    | 'easeOutSine'
+    | 'easeInOutSine'
+    | 'easeOutInSine'
+    | 'easeInQuad'
+    | 'easeOutQuad'
+    | 'easeInOutQuad'
+    | 'easeOutInQuad'
+    | 'easeInCubic'
+    | 'easeOutCubic'
+    | 'easeInOutCubic'
+    | 'easeOutInCubic'
+    | 'easeInQuart'
+    | 'easeOutQuart'
+    | 'easeInOutQuart'
+    | 'easeOutInQuart'
+    | 'easeInQuint'
+    | 'easeOutQuint'
+    | 'easeInOutQuint'
+    | 'easeOutInQuint'
+    | 'easeInExpo'
+    | 'easeOutExpo'
+    | 'easeInOutExpo'
+    | 'easeOutInExpo'
+    | 'easeInCirc'
+    | 'easeOutCirc'
+    | 'easeInOutCirc'
+    | 'easeOutInCirc'
+    | 'easeInBack'
+    | 'easeOutBack'
+    | 'easeInOutBack'
+    | 'easeOutInBack'
+    | 'easeInBounce'
+    | 'easeOutBounce'
+    | 'easeInOutBounce'
+    | 'easeOutInBounce';
 
-type EasingFunction = (t: number) => number;
-type EasingFunctions = Record<string, () => EasingFunction>;
-
-type Eases = Record<string, EasingFunction>;
-
-declare const penner: () => Eases & {
-    linear: () => EasingFunction;
-    easeInSine: () => EasingFunction;
-    easeOutSine: () => EasingFunction;
-    easeInOutSine: () => EasingFunction;
-    easeOutInSine: () => EasingFunction;
-    easeInCirc: () => EasingFunction;
-    easeOutCirc: () => EasingFunction;
-    easeInOutCirc: () => EasingFunction;
-    easeOutInCirc: () => EasingFunction;
-    easeInBack: () => EasingFunction;
-    easeOutBack: () => EasingFunction;
-    easeInOutBack: () => EasingFunction;
-    easeOutInBack: () => EasingFunction;
-    easeInBounce: () => EasingFunction;
-    easeOutBounce: () => EasingFunction;
-    easeInOutBounce: () => EasingFunction;
-    easeOutInBounce: () => EasingFunction;
-    easeInQuad: () => EasingFunction;
-    easeOutQuad: () => EasingFunction;
-    easeInOutQuad: () => EasingFunction;
-    easeOutInQuad: () => EasingFunction;
-    easeInCubic: () => EasingFunction;
-    easeOutCubic: () => EasingFunction;
-    easeInOutCubic: () => EasingFunction;
-    easeOutInCubic: () => EasingFunction;
-    easeInQuart: () => EasingFunction;
-    easeOutQuart: () => EasingFunction;
-    easeInOutQuart: () => EasingFunction;
-    easeOutInQuart: () => EasingFunction;
-    easeInQuint: () => EasingFunction;
-    easeOutQuint: () => EasingFunction;
-    easeInOutQuint: () => EasingFunction;
-    easeOutInQuint: () => EasingFunction;
-    easeInExpo: () => EasingFunction;
-    easeOutExpo: () => EasingFunction;
-    easeInOutExpo: () => EasingFunction;
-    easeOutInExpo: () => EasingFunction;
+type EasingFunction = (t:number)=>number
+type EasingFunctions = {
+    [index in EasingTypes]:EasingFunction;
 };
-
-type ValidTransform = 'translateX' | 'translateY' | 'translateZ';
-
-interface Anime {
-    delay: number;
-    duration: number;
-    targets: HTMLElement | HTMLElement[];
-    dest: {
-        [key: string]:
-            | [number | string, number | string]
-            | { value: number | string; duration: number; easing?: string }[];
-    };
-    easing?: string;
-}
-
-type KeyType = 'transform' | 'style' | 'attribute';
-
-interface CloneTarget {
-    [key: string]: string | number;
-}
-
-interface Engine {
-    (anime: Anime): void;
-}
-
-declare const engine: Engine;
 
 interface AnimeOptions {
-    targets?: any;
-    duration?: number;
-    easing?: string | EasingFunction;
-    delay?: number;
-    begin?: (() => void) | null;
-    update?: ((anim: Anime) => void) | null;
-    complete?: ((anim: Anime) => void) | null;
+    targets?: any,
+    duration?: number,
+    easing?: EasingTypes,
+    delay?: number,
+    begin?: Function,  // 初始回调
+    update?: Function, // 更新回调
+    complete?: Function,  // 结束回调
+    dest?: object
+    [index:string]:any
 }
 
-interface AnimeInstance {
-    targets: any;
-    duration: number;
-    easing: string | EasingFunction;
-    delay: number;
-    begin: (() => void) | null;
-    update: ((anim: Anime) => void) | null;
-    complete: ((anim: Anime) => void) | null;
-    dest: object;
-    tl: Timeline | null;
-    isPlay: boolean;
-    timeline(): Timeline;
-    play(): void;
-}
-
-declare class Anime {
-    constructor(options?: AnimeOptions);
-}
-
-interface TimelineInstance {
-    queue: AnimeInstance[];
-    add(options: AnimeOptions): TimelineInstance;
-    play(): void;
-}
-
+declare function penner(): EasingFunctions
+declare function engine(anime:Anime):void
 declare class Timeline {
-    constructor();
+    constructor()
+    add(option?:AnimeOptions)
+    play():void
+}
+declare class Anime {
+    tl: Timeline
+    // dest的类型有点多，先写成any
+    dest: any
+
+    constructor(options?:AnimeOptions)
+    timeline():Timeline
+    play():void
 }
 
-declare const anime: {
-    (options?: AnimeOptions): AnimeInstance;
-    random(min: number, max: number): number;
-};
+declare function anime(options?:AnimeOptions):Anime
 
-export default anime;
+declare namespace anime {
+    function random(min?: number, max?: number): number;
+}
+
+export default anime
