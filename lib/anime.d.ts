@@ -50,7 +50,6 @@ interface AnimeOptions {
     begin?: Function,  // 初始回调
     update?: Function, // 更新回调
     complete?: Function,  // 结束回调
-    dest?: object
     [index:string]:any
 }
 
