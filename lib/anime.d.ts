@@ -58,7 +58,7 @@ declare function penner(): EasingFunctions
 declare function engine(anime:Anime):void
 declare class Timeline {
     constructor()
-    add(option?:AnimeOptions)
+    add(option?:AnimeOptions):Timeline
     play():void
 }
 declare class Anime {
