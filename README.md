@@ -4,7 +4,10 @@ anime.js for [hexo-theme-shokaX](https://github.com/theme-shoka-x/hexo-theme-sho
 inspired by [anime](https://github.com/juliangarnier/anime)
 
 ## Usage
-
+### Import
+```html
+<script src="https://www.unpkg.com/theme-shokax-anime@latest/anime.min.js"></script>
+```
 ### Basic usage
 
 ```javascript
