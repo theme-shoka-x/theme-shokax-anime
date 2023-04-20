@@ -45,7 +45,7 @@ type EasingFunctions = {
 interface AnimeOptions {
     targets?: any,
     duration?: number,
-    easing?: EasingTypes,
+    easing?: string,
     delay?: number,
     begin?: Function,  // 初始回调
     update?: Function, // 更新回调
