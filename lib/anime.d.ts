@@ -76,4 +76,5 @@ declare namespace anime {
     function random(min: number, max: number): number;
 }
 
-export default anime
+export = anime
+export as namespace anime
