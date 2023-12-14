@@ -1,5 +1,7 @@
 # theme-shokax-anime
 
+![NPM](https://img.shields.io/npm/l/theme-shokax-anime) ![npm](https://img.shields.io/npm/v/theme-shokax-anime) ![npm](https://img.shields.io/npm/dm/theme-shokax-anime)
+
 anime.js for [hexo-theme-shokaX](https://github.com/theme-shoka-x/hexo-theme-shokaX)  
 inspired by [anime](https://github.com/juliangarnier/anime)
 
