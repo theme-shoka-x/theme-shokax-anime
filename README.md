@@ -8,7 +8,7 @@ inspired by [anime](https://github.com/juliangarnier/anime)
 ## Usage
 ### Import
 ```html
-<script src="https://www.unpkg.com/theme-shokax-anime@latest/anime.min.js"></script>
+<script src="https://www.unpkg.com/theme-shokax-anime@latest/anime.shokax.min.js"></script>
 ```
 ### Basic usage
 

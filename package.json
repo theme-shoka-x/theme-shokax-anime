@@ -1,12 +1,24 @@
 {
   "name": "theme-shokax-anime",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "anime.js for hexo-theme-shokax",
-  "main": "lib/anime.common.js",
-  "module": "lib/anime.es.mjs",
-  "types": "lib/anime.d.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@types/node": "^20.10.6",
+    "rollup": "^4.9.2",
+    "typescript": "^5.3.3"
   },
   "repository": {
     "type": "git",
