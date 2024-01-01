@@ -1,6 +1,6 @@
 {
   "name": "theme-shokax-anime",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "anime.js for hexo-theme-shokax",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
