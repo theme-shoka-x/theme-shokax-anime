@@ -1,6 +1,6 @@
 # theme-shokax-anime
 
-![NPM](https://img.shields.io/npm/l/theme-shokax-anime) ![npm](https://img.shields.io/npm/v/theme-shokax-anime) ![npm](https://img.shields.io/npm/dm/theme-shokax-anime) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/theme-shokax-anime)
+![NPM](https://img.shields.io/npm/l/theme-shokax-anime) ![npm](https://img.shields.io/npm/v/theme-shokax-anime) ![npm](https://img.shields.io/npm/dm/theme-shokax-anime) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/theme-shokax-anime) [![Coverage Status](https://coveralls.io/repos/github/theme-shoka-x/theme-shokax-anime/badge.svg?branch=main)](https://coveralls.io/github/theme-shoka-x/theme-shokax-anime?branch=main)
 
 
 anime.js for [hexo-theme-shokaX](https://github.com/theme-shoka-x/hexo-theme-shokaX)  
