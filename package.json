@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rollup -c",
     "test": "mocha -r ts-node/register 'test/**/*.ts'",
-    "test-cov": "c8 --reporter=lcovonly --reporter=text-summary npm test"
+    "test-cov": "c8 --reporter=lcov --reporter=text-summary npm test"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
