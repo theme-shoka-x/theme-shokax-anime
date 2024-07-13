@@ -4,12 +4,8 @@ import Anime from "../src/Anime";
 import { defaultOptions } from "../src/defaultOptions";
 import { JSDOM } from "jsdom";
 import Timeline from "../src/Timeline";
-import sinon from "sinon";
 
 describe("anime", () => {
-
-  global.requestAnimationFrame = sinon.spy();
-
   it('new - default', () => {
     const anime = new Anime();
     should.equal(anime.targets, defaultOptions.targets);
@@ -54,6 +50,7 @@ describe("anime", () => {
   });
 
   it('play', () => {
+    global.requestAnimationFrame = () => 0;
     const anime = new Anime();
     anime.play();
     anime.isPlay.should.be.true;

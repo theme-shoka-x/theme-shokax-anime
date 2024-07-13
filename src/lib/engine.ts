@@ -71,11 +71,10 @@ export default (anime: Anime) => {
           const keyType = selectKey(target, propKey);
           switch (keyType) {
             case "transform":
-              const regex = new RegExp(`${propKey}\((\w+)\)`, "g");
-              // is it true?
+              const regex = new RegExp(`${propKey}\\\((\\\w+)\\\)`);
               cloneTarget[propKey] = (
                 target as HTMLElement
-              ).style.transform.match(regex)[0];
+              ).style.transform.match(regex)[1];
               break;
             case "style":
               cloneTarget[propKey] = (target as HTMLElement).style[propKey];
@@ -133,7 +132,7 @@ export default (anime: Anime) => {
     (anime.targets as HTMLElement[] | object[]).forEach(
       (target: HTMLElement | object, index: string | number) => {
         Object.keys(anime.dest).forEach((key) => {
-          const origin = parseFloat(cloneTargets[index][key]);
+          let origin = parseFloat(cloneTargets[index][key]);
           let dest = anime.dest[key];
           // 对象类型
           if (typeof dest === "object") {
@@ -146,13 +145,18 @@ export default (anime: Anime) => {
                 current - start >= (dest as KeyFrameProp)[i].startTimeStamp
               )
                 i++;
-              const { value, duration, easing, startTimeStamp } = (
-                dest as KeyFrameProp
-              )[i - 1];
+              const {
+                value,
+                duration,
+                easing = anime.easing,
+                startTimeStamp,
+              } = (dest as KeyFrameProp)[i - 1];
+              origin = i <= 1 ? origin : (dest as KeyFrameProp)[i - 2].value;
               if (current <= start + duration + startTimeStamp) {
-                elapsed = penner()[easing ? easing : anime.easing]()(
-                  (current - start) / duration
+                elapsed = penner()[easing]()(
+                  (current - start - startTimeStamp) / duration
                 );
+                
                 change(target, origin, elapsed, value, key);
               } else if (final) {
                 change(target, origin, elapsed, value, key, final);
@@ -160,11 +164,9 @@ export default (anime: Anime) => {
             } else {
               // nest模式
               // 支持 {value: 1, duration: 500, easing: 'linear'}
-              const { value, duration, easing } = dest;
+              const { value, duration, easing = anime.easing } = dest;
               if (current <= start + duration) {
-                elapsed = penner()[easing ? easing : anime.easing]()(
-                  (current - start) / duration
-                );
+                elapsed = penner()[easing]()((current - start) / duration);
                 change(target, origin, elapsed, value, key);
               } else if (final) {
                 change(target, origin, elapsed, value, key, final);
