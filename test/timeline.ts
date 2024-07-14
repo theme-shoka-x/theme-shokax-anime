@@ -16,4 +16,12 @@ describe("timeline", () => {
     timeline.queue.length.should.equal(1);
     (timeline.queue[0] instanceof Anime).should.be.true;
   });
+
+  it('play', () => {
+    global.requestAnimationFrame = () => 0;
+    const timeline = new Timeline();
+    timeline.add();
+    timeline.play();
+    timeline.queue[0].isPlay.should.be.true;
+  });
 });

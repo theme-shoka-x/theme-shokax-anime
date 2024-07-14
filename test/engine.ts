@@ -134,7 +134,7 @@ describe("engine", () => {
     global.requestAnimationFrame = (cb) => {
       Date.now = () => 500;
       global.requestAnimationFrame = (cb) => {
-        targets.x.should.equal(1.015625);
+        targets.x.should.equal(1.03125);
         Date.now = () => 1000;
         global.requestAnimationFrame = (cb) => {
           targets.x.should.equal(2);
