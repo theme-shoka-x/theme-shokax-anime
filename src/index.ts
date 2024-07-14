@@ -5,7 +5,7 @@ const anime = (options?: AnimeOptions) => {
   return new Anime(options);
 };
 
-anime.random = function (min: number, max: number) {
+anime.random = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
