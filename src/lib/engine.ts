@@ -34,24 +34,21 @@ export default (anime: Anime) => {
       const cloneTarget: Record<string, number | string> = {};
       for (const propKey in anime.dest) {
         const propValue = anime.dest[propKey];
+        const keyType = selectKey(target, propKey);
         if (Array.isArray(propValue)) {
           // [0,100]类型，from-to模式
           if (propValue.length === 2 && typeof propValue[0] !== "object") {
             // 强制改变当前初始状态
-            // 需考虑是否为style/transform/attribute
-            switch (selectKey(target, propKey)) {
-              case "transform":
-                (target as HTMLElement).style.transform = `${propKey}(${
-                  typeof propValue[0] === "string"
-                    ? propValue[0]
-                    : propValue[0] + "px"
-                })`;
-                break;
-              case "style":
-                (target as HTMLElement).style[propKey] = propValue[0];
-                break;
-              default:
-                target[propKey] = propValue[0];
+            if (keyType === "transform") {
+              (target as HTMLElement).style.transform = `${propKey}(${
+                typeof propValue[0] === "string"
+                  ? propValue[0]
+                  : propValue[0] + "px"
+              })`;
+            } else if (keyType === "style") {
+              (target as HTMLElement).style[propKey] = propValue[0];
+            } else {
+              target[propKey] = propValue[0];
             }
             cloneTarget[propKey] = propValue[0];
             anime.dest[propKey] = propValue[1];
@@ -68,19 +65,14 @@ export default (anime: Anime) => {
             cloneTarget[propKey] = target[propKey];
           }
         } else {
-          const keyType = selectKey(target, propKey);
-          switch (keyType) {
-            case "transform":
-              const regex = new RegExp(`${propKey}\\\((\\\w+)\\\)`);
-              cloneTarget[propKey] = (
-                target as HTMLElement
-              ).style.transform.match(regex)[1];
-              break;
-            case "style":
-              cloneTarget[propKey] = (target as HTMLElement).style[propKey];
-              break;
-            default:
-              cloneTarget[propKey] = target[propKey];
+          if (keyType === "transform") {
+            cloneTarget[propKey] = (
+              target as HTMLElement
+            ).style.transform.match(new RegExp(`${propKey}\\((\\w+)\\)`))[1];
+          } else if (keyType === "style") {
+            cloneTarget[propKey] = (target as HTMLElement).style[propKey];
+          } else {
+            cloneTarget[propKey] = target[propKey];
           }
         }
       }
@@ -99,11 +91,8 @@ export default (anime: Anime) => {
   ) => {
     let keyCode;
     if (typeof value === "string") {
-      if (value.endsWith("%")) {
-        keyCode = "%";
-        value = parseFloat(value);
-      } else if (value.endsWith("px")) {
-        keyCode = "px";
+      keyCode = value.endsWith("%") ? "%" : value.endsWith("px") ? "px" : null;
+      if (keyCode) {
         value = parseFloat(value);
       } else {
         throw new TypeError(`string value must ends with '%' or 'px'`);
@@ -113,18 +102,14 @@ export default (anime: Anime) => {
     if (keyCode) {
       nextValue += keyCode;
     }
-    switch (selectKey(target, key)) {
-      case "transform":
-        (target as HTMLElement).style.transform = `${key}(${nextValue}${
-          keyCode ? "" : "px"
-        })`;
-        break;
-      case "style":
-        (target as HTMLElement).style[key] = nextValue;
-        break;
-      default:
-        target[key] = nextValue;
-    }
+    const targetKey = selectKey(target, key);
+    if (targetKey === "transform")
+      (target as HTMLElement).style.transform = `${key}(${nextValue}${
+        keyCode ? "" : "px"
+      })`;
+    else if (targetKey === "style")
+      (target as HTMLElement).style[key] = nextValue;
+    else target[key] = nextValue;
   };
 
   // 改变target所有的属性
@@ -156,7 +141,7 @@ export default (anime: Anime) => {
                 elapsed = penner()[easing]()(
                   (current - start - startTimeStamp) / duration
                 );
-                
+
                 change(target, origin, elapsed, value, key);
               } else if (final) {
                 change(target, origin, elapsed, value, key, final);
@@ -194,33 +179,33 @@ export default (anime: Anime) => {
   // 核心函数，用于控制动画rAF
   const step = () => {
     const current = Date.now();
-    // 已经结束，调用结束回调
     if (current > end) {
       // 数据回正
       changeAll(1, current, true);
-      typeof anime.complete == "function" &&
+      if (typeof anime.complete === "function") {
+        // 已经结束，调用结束回调
         anime.complete(anime.targets as HTMLElement[] | object[]);
+      }
       anime.isPlay = false;
-      return;
-    }
-    // 还未开始，继续delay
-    if (current < start) {
+    } else {
+      if (current >= start) {
+        const elapsed = penner()[anime.easing]()(
+          (current - start) / anime.duration
+        );
+        if (isValid) changeAll(elapsed, current);
+        if (typeof anime.update === "function") {
+          // 调用更新回调
+          anime.update(anime.targets as HTMLElement[] | object[]);
+        }
+      }
       requestAnimationFrame(step);
-      return;
     }
-    const elapsed = penner()[anime.easing]()(
-      (current - start) / anime.duration
-    );
-    isValid && changeAll(elapsed, current);
-    // 调用更新回调
-    typeof anime.update == "function" &&
-      anime.update(anime.targets as HTMLElement[] | object[]);
-    requestAnimationFrame(step);
   };
 
   initTarget();
   // 调用初始回调
-  typeof anime.begin == "function" &&
+  if (typeof anime.begin === "function") {
     anime.begin(anime.targets as HTMLElement[] | object[]);
+  }
   step();
 };
