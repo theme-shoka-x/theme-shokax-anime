@@ -5,20 +5,14 @@ import penner from "./penner";
 // 目前仅支持translate
 const validTransform = ["translateX", "translateY", "translateZ"];
 
-const selectKey = (target: HTMLElement | object, key: string) => {
-  if (
-    target instanceof HTMLElement &&
-    target.style &&
-    "transform" in target.style &&
-    validTransform.includes(key)
-  ) {
-    return "transform";
-  }
-  if (target instanceof HTMLElement && target.style && key in target.style) {
-    return "style";
-  }
-  return "attribute";
-};
+const selectKey = (target: HTMLElement | object, key: string) =>
+  target instanceof HTMLElement
+    ? "transform" in target.style && validTransform.includes(key)
+      ? "transform"
+      : key in target.style
+      ? "style"
+      : "attribute"
+    : "attribute";
 
 export default (anime: Anime) => {
   // 动画开始时间
@@ -47,22 +41,17 @@ export default (anime: Anime) => {
             // 需考虑是否为style/transform/attribute
             switch (selectKey(target, propKey)) {
               case "transform":
-                if (typeof propValue[0] === "string") {
-                  (
-                    target as HTMLElement
-                  ).style.transform = `${propKey}(${propValue[0]})`;
-                } else {
-                  (
-                    target as HTMLElement
-                  ).style.transform = `${propKey}(${propValue[0]}px)`;
-                }
+                (target as HTMLElement).style.transform = `${propKey}(${
+                  typeof propValue[0] === "string"
+                    ? propValue[0]
+                    : propValue[0] + "px"
+                })`;
                 break;
               case "style":
-                (target as HTMLElement)["style"][propKey] = propValue[0];
+                (target as HTMLElement).style[propKey] = propValue[0];
                 break;
-              case "attribute":
+              default:
                 target[propKey] = propValue[0];
-                break;
             }
             cloneTarget[propKey] = propValue[0];
             anime.dest[propKey] = propValue[1];
@@ -82,16 +71,15 @@ export default (anime: Anime) => {
           const keyType = selectKey(target, propKey);
           switch (keyType) {
             case "transform":
-              const regex = new RegExp(`${propKey}\((\w+)\)`, "g");
-              // is it true?
+              const regex = new RegExp(`${propKey}\\\((\\\w+)\\\)`);
               cloneTarget[propKey] = (
                 target as HTMLElement
-              ).style.transform.match(regex)[0];
+              ).style.transform.match(regex)[1];
               break;
             case "style":
-              cloneTarget[propKey] = (target as HTMLElement)["style"][propKey];
+              cloneTarget[propKey] = (target as HTMLElement).style[propKey];
               break;
-            case "attribute":
+            default:
               cloneTarget[propKey] = target[propKey];
           }
         }
@@ -127,16 +115,14 @@ export default (anime: Anime) => {
     }
     switch (selectKey(target, key)) {
       case "transform":
-        if (keyCode) {
-          (target as HTMLElement).style.transform = `${key}(${nextValue})`;
-        } else {
-          (target as HTMLElement).style.transform = `${key}(${nextValue}px)`;
-        }
+        (target as HTMLElement).style.transform = `${key}(${nextValue}${
+          keyCode ? "" : "px"
+        })`;
         break;
       case "style":
-        (target as HTMLElement)["style"][key] = nextValue;
+        (target as HTMLElement).style[key] = nextValue;
         break;
-      case "attribute":
+      default:
         target[key] = nextValue;
     }
   };
@@ -146,7 +132,7 @@ export default (anime: Anime) => {
     (anime.targets as HTMLElement[] | object[]).forEach(
       (target: HTMLElement | object, index: string | number) => {
         Object.keys(anime.dest).forEach((key) => {
-          const origin = parseFloat(cloneTargets[index][key]);
+          let origin = parseFloat(cloneTargets[index][key]);
           let dest = anime.dest[key];
           // 对象类型
           if (typeof dest === "object") {
@@ -154,21 +140,23 @@ export default (anime: Anime) => {
               // keyframe模式
               // 支持 [{value: 1, duration: 500, easing: 'linear'},{value: 2, duration: 500, easing: 'linear'}]
               let i = 0;
-              for (; i < dest.length; i++) {
-                if (
-                  current - start <
-                  (dest as KeyFrameProp)[i].startTimeStamp
-                ) {
-                  break;
-                }
-              }
-              const { value, duration, easing, startTimeStamp } = (
-                dest as KeyFrameProp
-              )[i - 1];
+              while (
+                i < dest.length &&
+                current - start >= (dest as KeyFrameProp)[i].startTimeStamp
+              )
+                i++;
+              const {
+                value,
+                duration,
+                easing = anime.easing,
+                startTimeStamp,
+              } = (dest as KeyFrameProp)[i - 1];
+              origin = i <= 1 ? origin : (dest as KeyFrameProp)[i - 2].value;
               if (current <= start + duration + startTimeStamp) {
-                elapsed = penner()[easing ? easing : anime.easing]()(
-                  (current - start) / duration
+                elapsed = penner()[easing]()(
+                  (current - start - startTimeStamp) / duration
                 );
+                
                 change(target, origin, elapsed, value, key);
               } else if (final) {
                 change(target, origin, elapsed, value, key, final);
@@ -176,11 +164,9 @@ export default (anime: Anime) => {
             } else {
               // nest模式
               // 支持 {value: 1, duration: 500, easing: 'linear'}
-              const { value, duration, easing } = dest;
+              const { value, duration, easing = anime.easing } = dest;
               if (current <= start + duration) {
-                elapsed = penner()[easing ? easing : anime.easing]()(
-                  (current - start) / duration
-                );
+                elapsed = penner()[easing]()((current - start) / duration);
                 change(target, origin, elapsed, value, key);
               } else if (final) {
                 change(target, origin, elapsed, value, key, final);
