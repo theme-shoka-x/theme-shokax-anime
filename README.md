@@ -9,8 +9,13 @@ inspired by [anime](https://github.com/juliangarnier/anime)
 ## Usage
 ### Import
 ```html
-<script src="https://www.unpkg.com/theme-shokax-anime@latest/anime.shokax.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/theme-shokax-anime@latest/dist/index.umd.js"></script>
 ```
+or
+```bash
+npm i theme-shokax-anime --save
+```
+
 ### Basic usage
 
 ```javascript
