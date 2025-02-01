@@ -1,11 +1,11 @@
 export interface AnimeOptions {
-  targets?: HTMLElement | object | HTMLElement[] | object[];
+  targets?: HTMLElement | Record<PropertyKey, any> | HTMLElement[] | Record<PropertyKey, any>[];
   duration?: number;
   easing?: EasingTypes;
   delay?: number;
-  begin?: (targets: HTMLElement[] | object[]) => void; // 初始回调
-  update?: (targets: HTMLElement[] | object[]) => void; // 更新回调
-  complete?: (targets: HTMLElement[] | object[]) => void; // 结束回调
+  begin?: (targets: HTMLElement[] | Record<PropertyKey, any>[]) => void; // 初始回调
+  update?: (targets: HTMLElement[] | Record<PropertyKey, any>[]) => void; // 更新回调
+  complete?: (targets: HTMLElement[] | Record<PropertyKey, any>[]) => void; // 结束回调
   [index: string]:
     | ((...args: any[]) => string | number)
     | BasicProp

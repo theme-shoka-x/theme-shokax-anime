@@ -7,7 +7,7 @@ const pennerFn = penner();
 // 目前仅支持translate
 const validTransform = ["translateX", "translateY", "translateZ"];
 
-const selectKey = (target: HTMLElement | object, key: string) =>
+const selectKey = (target: HTMLElement | Record<PropertyKey, any>, key: string) =>
   target instanceof HTMLElement
     ? "transform" in target.style && validTransform.includes(key)
       ? "transform"
@@ -32,7 +32,7 @@ export default (anime: Anime) => {
     if (!Array.isArray(anime.targets)) {
       anime.targets = [anime.targets];
     }
-    for (const target of anime.targets as HTMLElement[] | object[]) {
+    for (const target of anime.targets as HTMLElement[] | Record<PropertyKey, any>[]) {
       const cloneTarget: Record<string, number | string> = {};
       for (const propKey in anime.dest) {
         const propValue = anime.dest[propKey];
@@ -84,7 +84,7 @@ export default (anime: Anime) => {
 
   // 改变target单个key的属性
   const change = (
-    target: object | HTMLElement,
+    target: Record<PropertyKey, any> | HTMLElement,
     origin: number,
     elapsed: number,
     value: string | number,
@@ -116,8 +116,8 @@ export default (anime: Anime) => {
 
   // 改变target所有的属性
   const changeAll = (elapsed: number, current: number, final = false) => {
-    (anime.targets as HTMLElement[] | object[]).forEach(
-      (target: HTMLElement | object, index: string | number) => {
+    (anime.targets as HTMLElement[] | Record<PropertyKey, any>[]).forEach(
+      (target: HTMLElement | Record<PropertyKey, any>, index: string | number) => {
         Object.keys(anime.dest).forEach((key) => {
           let origin = parseFloat(cloneTargets[index][key]);
           let dest = anime.dest[key];
@@ -185,7 +185,7 @@ export default (anime: Anime) => {
       changeAll(1, current, true);
       if (typeof anime.complete === "function") {
         // 已经结束，调用结束回调
-        anime.complete(anime.targets as HTMLElement[] | object[]);
+        anime.complete(anime.targets as HTMLElement[] | Record<PropertyKey, any>[]);
       }
       anime.isPlay = false;
     } else {
@@ -196,7 +196,7 @@ export default (anime: Anime) => {
         if (isValid) changeAll(elapsed, current);
         if (typeof anime.update === "function") {
           // 调用更新回调
-          anime.update(anime.targets as HTMLElement[] | object[]);
+          anime.update(anime.targets as HTMLElement[] | Record<PropertyKey, any>[]);
         }
       }
       requestAnimationFrame(step);
@@ -206,7 +206,7 @@ export default (anime: Anime) => {
   initTarget();
   // 调用初始回调
   if (typeof anime.begin === "function") {
-    anime.begin(anime.targets as HTMLElement[] | object[]);
+    anime.begin(anime.targets as HTMLElement[] | Record<PropertyKey, any>[]);
   }
   step();
 };

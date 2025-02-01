@@ -11,13 +11,13 @@ import type {
 } from "./types";
 
 export default class Anime {
-  targets: HTMLElement | object | HTMLElement[] | object[];
+  targets: HTMLElement | Record<PropertyKey, any> | HTMLElement[] | Record<PropertyKey, any>[];
   duration: number;
   easing: EasingTypes;
   delay: number;
-  begin?: (targets: HTMLElement[] | object[]) => void;
-  update?: (targets: HTMLElement[] | object[]) => void;
-  complete?: (targets: HTMLElement[] | object[]) => void;
+  begin?: (targets: HTMLElement[] | Record<PropertyKey, any>[]) => void;
+  update?: (targets: HTMLElement[] | Record<PropertyKey, any>[]) => void;
+  complete?: (targets: HTMLElement[] | Record<PropertyKey, any>[]) => void;
   dest: Record<
     string,
     | ((...args: any[]) => string | number)
