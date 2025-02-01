@@ -139,11 +139,10 @@ export default (anime: Anime) => {
                 startTimeStamp,
               } = (dest as KeyFrameProp)[i - 1];
               origin = i <= 1 ? origin : (dest as KeyFrameProp)[i - 2].value;
+              const elapsed = pennerFn[easing]()(
+                (current - start - startTimeStamp) / duration
+              );
               if (current <= start + duration + startTimeStamp) {
-                elapsed = pennerFn[easing]()(
-                  (current - start - startTimeStamp) / duration
-                );
-
                 change(target, origin, elapsed, value, key);
               } else if (final) {
                 change(target, origin, elapsed, value, key, final);
@@ -152,8 +151,8 @@ export default (anime: Anime) => {
               // nest模式
               // 支持 {value: 1, duration: 500, easing: 'linear'}
               const { value, duration, easing = anime.easing } = dest;
+              const elapsed = pennerFn[easing]()((current - start) / duration);
               if (current <= start + duration) {
-                elapsed = pennerFn[easing]()((current - start) / duration);
                 change(target, origin, elapsed, value, key);
               } else if (final) {
                 change(target, origin, elapsed, value, key, final);
