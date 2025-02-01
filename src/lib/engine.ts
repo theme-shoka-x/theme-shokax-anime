@@ -2,6 +2,8 @@ import type Anime from "../Anime";
 import type { KeyFrameProp } from "../types";
 import penner from "./penner";
 
+const pennerFn = penner();
+
 // 目前仅支持translate
 const validTransform = ["translateX", "translateY", "translateZ"];
 
@@ -138,7 +140,7 @@ export default (anime: Anime) => {
               } = (dest as KeyFrameProp)[i - 1];
               origin = i <= 1 ? origin : (dest as KeyFrameProp)[i - 2].value;
               if (current <= start + duration + startTimeStamp) {
-                elapsed = penner()[easing]()(
+                elapsed = pennerFn[easing]()(
                   (current - start - startTimeStamp) / duration
                 );
 
@@ -151,7 +153,7 @@ export default (anime: Anime) => {
               // 支持 {value: 1, duration: 500, easing: 'linear'}
               const { value, duration, easing = anime.easing } = dest;
               if (current <= start + duration) {
-                elapsed = penner()[easing]()((current - start) / duration);
+                elapsed = pennerFn[easing]()((current - start) / duration);
                 change(target, origin, elapsed, value, key);
               } else if (final) {
                 change(target, origin, elapsed, value, key, final);
@@ -189,7 +191,7 @@ export default (anime: Anime) => {
       anime.isPlay = false;
     } else {
       if (current >= start) {
-        const elapsed = penner()[anime.easing]()(
+        const elapsed = pennerFn[anime.easing]()(
           (current - start) / anime.duration
         );
         if (isValid) changeAll(elapsed, current);
